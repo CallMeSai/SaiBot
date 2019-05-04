@@ -1,0 +1,7 @@
+
+key.txt
+testkey.txt
+saikey.txt
+test.py
+anime/
+osu/

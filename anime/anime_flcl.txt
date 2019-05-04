@@ -1,0 +1,17 @@
+{
+    "data": {
+        "Media": {
+            "id": 227,
+            "title": {
+                "romaji": "FLCL",
+                "english": null,
+                "native": "\u30d5\u30ea\u30af\u30ea"
+            },
+            "description": "Naota is a normal Japanese 6th grade boy (although a little cynical), but when his older brother leaves for America to play baseball, his brother leaves his homeless 17 year old girlfriend Mamimi behind. Mamimi is sending mixed signals and advances to Naota, and he doesn't know what to do about her. But to make matters worse, Naota's world is totally turned upside down when he is run over by a woman on a Vespa. During their first encounter, she hits him over the head with her bass guitar, which then causes a horn to grow out of his forehead. She calls herself \"Haruko\" and her presence changes Naota's life to even further insanity.<br><br>\n(Source: ANN)",
+            "averageScore": 78,
+            "coverImage": {
+                "medium": "https://cdn.anilist.co/img/dir/anime/med/227-xOQLeS9JPdaE.jpg"
+            }
+        }
+    }
+}
