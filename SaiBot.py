@@ -60,28 +60,11 @@ async def on_ready():
     print(bot.user.name)
     print(bot.user.id)
     print('-------')
-    #r = requests.get("https://api.xivdb.com/item/22884?pretty=1").json()["craftable"][0]["tree"]
-    #print(r)
-    # if not r:
-    #     print("broke")
-    #     return Exception("NoValue")
-    # #create new file and dump response into file
-    # else:
-    #     for i in r:
-    #         print(i['name'] + " x " + str(i['quantity']))
-    #         tabs = tree(i)
 
 #
 # --COMMANDS--
 #If message starts with command prefix, read command word and reply
 #
-def tree(recipe):
-    if "synths" in recipe:
-        for x in recipe['synths']:
-            rec = requests.get(xivdb + "recipe/" + x + "?pretty=1").json()
-            for i in rec['tree']:
-                print(i['name'] + " x " + str(i['quantity']))
-                tree(i)
 
 @bot.command(pass_context = True)
 async def pause(ctx):
@@ -91,7 +74,7 @@ async def pause(ctx):
 @bot.command(pass_context = True)
 async def clear(ctx):
     channel = ctx.channel
-    if ctx.message.author == me: await bot.purge_from(Server.get_channel(ctx.message.server,'431806042377289739'))
+    if ctx.message.author == me: await ctx.purge()
     else: await channel.send("You are not permitted to do that")
 
 #Help command helps users understand how to use SaiBot
@@ -202,34 +185,6 @@ async def v(ctx):
     except Exception as err:
         await channel.send('Sorry, something broke. A message has been sent to Sai to fix this')
         await me.send("Uuwahh! Senpai! Something broke!\n ``` " + str(err) + " ```")
-
-@bot.command(pass_context = True)
-async def craft(ctx):
-    channel = ctx.channel
-    msg = ctx.message.content.lstrip('$$craft').split('/').pop(4)
-    print(msg)
-    file = Path('crafts.txt')
-    #send request to api, store response in r
-    r = requests.get(xivdb + "item/" + msg + "?pretty=1").json()["craftable"][0]["tree"]
-    #print(r)
-    if not r:
-        print("broke")
-        return Exception("NoValue")
-    #create new file and dump response into file
-    else:
-        for i in r:
-            print(i['name'] + " x " + str(i['quantity']))
-            if "synths" in i:
-                for i2 in i['synths']:
-                    for ii in i2:
-                        print(str(ii))
-        #with file.open('a') as newfile:
-        #    for i in r:
-        #    json.dump(r,newfile,indent=4)
-        #    newfile.close()
-        
-
-        
 
 #
 # --COMMANDS END--
