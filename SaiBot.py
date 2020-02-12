@@ -14,26 +14,8 @@ import re
 from voca import voca
 import subprocess
 import youtube_dl
+from rewrite import Music
 
-ytdl_format_options = {
-    'format': 'bestaudio/best',
-    'outtmpl': '%(extractor)s-%(id)s-%(title)s.%(ext)s',
-    'restrictfilenames': True,
-    'noplaylist': True,
-    'nocheckcertificate': True,
-    'ignoreerrors': False,
-    'logtostderr': False,
-    'quiet': True,
-    'no_warnings': True,
-    'default_search': 'auto',
-    'source_address': '0.0.0.0' # bind to ipv4 since ipv6 addresses cause issues sometimes
-}
-
-ffmpeg_options = {
-    'options': '-vn'
-}
-
-ytdl = youtube_dl.YoutubeDL(ytdl_format_options)
 #read key from file
 key = json.load(open('saikey.txt'))
 
@@ -67,11 +49,6 @@ async def on_ready():
 #
 
 @bot.command(pass_context = True)
-async def pause(ctx):
-    channel = ctx.channel
-    await channel.send("!pause")
-
-@bot.command(pass_context = True)
 async def clear(ctx):
     channel = ctx.channel
     if ctx.message.author == me: await ctx.purge()
@@ -96,55 +73,6 @@ async def BOOST(ctx):
 #Split message by new line, pop first element in list, split again by spaces.
 #Delete command from message and join elements with a space between each.
 #Call anime function and send embed message.
-
-players = {}
-class YTDLSource(discord.PCMVolumeTransformer):
-    def __init__(self,source,*,data,volume=0.5):
-        super().__init__(source,volume)
-        self.data = data
-        self.title = data.get('title')
-        self.url = data.get('url')
-
-    @classmethod
-    async def from_url(cls,url,*,loop=None,stream = False):
-        loop = loop or asyncio.get_event_loop()
-        data = await loop.run_in_executor(None,lambda:ytdl.extract_info(url,download = not stream))
-
-        if 'entries' in data:
-            data = data['entries'][0]
-        filename = data['url'] if stream else ytdl.prepare_filename(data)
-        return cls(discord.FFmpegPCMAudio(filename, **ffmpeg_options), data=data)
-
-
-@bot.command(pass_context = True)
-async def play(ctx,url):
-    x = None
-    for x in bot.voice_clients:
-        if ctx.author.voice.channel == x.channel: 
-            voice = x 
-            break
-    if x == None: voice = await connect(ctx)
-    audio = await YTDLSource.from_url(url,loop=bot.loop)
-    if voice.is_playing():
-        voice.stop()
-        voice.play(audio)
-    else: voice.play(audio)
-    #await channel.send("!play " +  message)
-
-#@bot.command(pass_context = True)
-async def connect(ctx):
-    channel = ctx.channel
-    author = ctx.author
-    print(author.voice)
-    vChannel = bot.get_channel(author.voice.channel.id)
-    vChannel = await vChannel.connect()
-    return vChannel
-
-@bot.command(pass_context = True)
-async def disconnect(ctx):
-    await ctx.bot.voice_clients[0].disconnect()
-    #await bot.get_channel(bot.get_member(bot.get_user(bot.user.id)).voice.channel.id).disconnect()
-    
 
 @bot.command(pass_context = True)
 async def a(ctx):
@@ -213,4 +141,5 @@ async def on_message(message):
 
     await bot.process_commands(message)
 
+bot.add_cog(Music(bot))
 bot.run(str(key["discord"]))
